@@ -4,12 +4,11 @@ Ce projet est un chatbot développé en Python qui utilise les bibliothèques La
 
 ## Fonctionnalités
 
-* Interface graphique PyQt5
-* Logique du chatbot intégrée avec LangChain et Groq
-* Prompt & formtage  dédier a la correction de texte dans différents langues
-
-* Sélection de 10 langues différentes & intententions différentes
-* Export des échanges sous format dans chat_log.csv
+- Interface graphique conviviale développée avec PyQt5
+- Logique du chatbot implémentée à l'aide de LangChain et Groq
+- Prompts et formatage spécialisés pour la correction de textes dans diverses langues
+- Possibilité de sélectionner la langue et l'intention souhaitées
+- Exportation des conversations au format CSV (chat_log.csv)
 
 
 ## Dépendances
