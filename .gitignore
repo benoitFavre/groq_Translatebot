@@ -1,0 +1,44 @@
+# Environnement virtuel
+.venv/
+venv/
+
+# Divers
+chatbot/groq_credential.py
+chat_log.csv
+Clean_export.py
+
+# Fichiers Python compilés
+__pycache__/
+*.py[cod]
+
+# Fichiers de configuration VS Code
+.vscode/
+
+# Fichiers de configuration d'environnement
+.env
+
+# Fichiers de logs
+*.log
+
+# Fichiers système macOS
+.DS_Store
+
+# Fichiers temporaires
+*.tmp
+
+# Fichiers de base de données SQLite (si utilisés)
+*.db
+*.sqlite3
+
+# Dossiers de build ou de distribution
+build/
+dist/
+*.egg-info/
+
+# Fichiers de cache Jupyter Notebook
+.ipynb_checkpoints
+
+# Fichiers spécifiques à votre projet (ajoutez selon vos besoins)
+# Par exemple :
+# config.py
+# secrets.json
