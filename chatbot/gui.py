@@ -6,7 +6,7 @@ from threading import Thread
 from chatbot.chatbot import ChatbotManager
 import time
 import csv
-from chatbot.config import MODEL_NAME, RESPONSE_TEMPLATE
+from chatbot.config import MODEL_NAME, RESPONSE_TEMPLATE,Languages,Intention_options
 
 class ChatApp(QWidget):
     # Signal pour émettre un nouveau message
@@ -17,36 +17,13 @@ class ChatApp(QWidget):
         super().__init__()
         self.chatbot_initialized = False
         # Liste des options de langues
-        self.options = [
-            ("Anglais", "English"),
-            ("Chinois", "Chinese"),
-            ("Espagnol", "Spanish"),
-            ("Arabe", "Arabic"),
-            ("Français", "French"),
-            ("Russe", "French Gangsta rap"),  # Note: "Gangsta rap" semble être une erreur ici
-            ("Allemand", "German"),
-            ("Portugais", "Portuguese"),
-            ("Hindi", "Hindi"),
-            ("Japonais", "Japanese")
-        ]
-        self.intention_options = [
-            ("Auto", ""),
-            ("Bavard", "in a more chatty way"),
-            ("Enjoué", "in a more cheerful way"),
-            ("Sérieux", "in a more serious way"),
-            ("Timide", "in a more shy way"),
-            ("Réfléchi", "in a more thoughtful way"),
-            ("Optimiste", "in a more optimistic way"),
-            ("Pessimiste", "in a more pessimistic way"),
-            ("Indécis", "in a more indecisive way"),
-            ("Décisif", "in a more decisive way"),
-            ("Émotif", "in a more emotional way")
+        self.options = Languages
+        self.intention_options = Intention_options
 
-        ]
-
+        # Initialisation des variables pour l'export
+        self.last_user_input = ""
         self.last_bot_response = ""
         self.last_response_time = 0
-        self.last_user_input = ""
         self.MODEL_NAME = MODEL_NAME
 
         self.text_zone = QTextEdit(self)
@@ -79,6 +56,7 @@ class ChatApp(QWidget):
         layout.addWidget(self.var2_select)
 
         # Création du menu déroulant pour la sélection de l'intention cible
+        
         self.var3_label = QLabel("Intention cible:")
         self.var3_select = QComboBox(self)
         self.var3_select.addItems([opt[0] for opt in self.intention_options])
