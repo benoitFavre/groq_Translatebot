@@ -24,14 +24,20 @@ class ChatbotManager:
             HumanMessagePromptTemplate.from_template("{human_input}\n\n{format_instructions}")
         ])
         
-        self.conversation = self.prompt_template | self.groq_chat | self.output_parser
+        self.conversation = self.prompt_template | self.groq_chat 
 
     def get_response(self, user_input):
         format_instructions = self.output_parser.get_format_instructions()
-        response = self.conversation.invoke({
+        raw_response = self.conversation.invoke({
             "human_input": user_input,
             "format_instructions": format_instructions
         })
+        
+        # Parser la réponse brute
+        structured_response = self.output_parser.parse(raw_response.content)
 
-        return response
+        # Ajout des métadata
+        structured_response.update(raw_response.response_metadata)
+
+        return structured_response
     

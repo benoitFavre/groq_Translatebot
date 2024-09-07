@@ -6,11 +6,11 @@ from threading import Thread
 from chatbot.chatbot import ChatbotManager
 import time
 import csv
-from chatbot.config import MODEL_NAME, RESPONSE_TEMPLATE,Languages,Intention_options
+from chatbot.config import RESPONSE_TEMPLATE,Languages,Intention_options
 
 class ChatApp(QWidget):
     # Signal pour émettre un nouveau message
-    new_message_signal = pyqtSignal(str, str, float)
+    new_message_signal = pyqtSignal(str, str, float )
     start_loading_signal = pyqtSignal()
     stop_loading_signal = pyqtSignal()
     def __init__(self):
@@ -21,10 +21,9 @@ class ChatApp(QWidget):
         self.intention_options = Intention_options
 
         # Initialisation des variables pour l'export
-        self.last_user_input = ""
-        self.last_bot_response = ""
+        self.last_response =  {}
         self.last_response_time = 0
-        self.MODEL_NAME = MODEL_NAME
+        self.last_user_input = ""
 
         self.text_zone = QTextEdit(self)
         self.text_zone.setReadOnly(True)
@@ -98,41 +97,65 @@ class ChatApp(QWidget):
 
         self.setLayout(layout)
 
-    def export_to_csv(self):
-        #   print(self.var1_select.currentText())   # origin_language
-        #   print(self.var2_select.currentText())   # target_language
-        #   print(self.var3_select.currentText())   # intention_options
-        #   print(self.last_user_input)             # user_input
-        #   print(self.last_bot_response)           # correction,translation,note
-        #   print(self.last_response_time)          # response_time 
-        #   print(self.last_user_input)             # user_input
-        #   print(self.MODEL_NAME)                  # MODEL_NAME
-        if isinstance(self.last_bot_response, dict):
-            # Récupérer les valeurs des clés 'correction', 'translation' et 'note'
-            correction = self.last_bot_response.get('correction', '')
-            translation = self.last_bot_response.get('translation', '')
-            note = self.last_bot_response.get('note', '')
+    # Définition des constantes
+    # CORRECTION_KEY = 'correction'
+    # TRANSLATION_KEY = 'translation'
+    # NOTE_KEY = 'note'
+    # MODEL_NAME_KEY = 'model_name'
+    # COMPLETION_TOKENS_KEY = 'completion_tokens'
+    # PROMPT_TOKENS_KEY = 'prompt_tokens'
+    # TOTAL_TOKENS_KEY = 'total_tokens'
+    # COMPLETION_TIME_KEY = 'completion_time'
+    # PROMPT_TIME_KEY = 'prompt_time'
+    # QUEUE_TIME_KEY = 'queue_time'
 
-            # Ouvrir le fichier CSV en mode écriture avec l'encodage UTF-8
-            with open('chat_log.csv', 'a', newline='', encoding='utf-8') as csvfile:
-                writer = csv.writer(csvfile)
 
-                # Écrire les données dans le fichier CSV
-                writer.writerow([
-                    self.var1_select.currentText(),  # origin_language
-                    self.var3_select.currentText(),  # intention_options
-                    self.var2_select.currentText(),  # target_language
-                    self.last_user_input,  # user_input
-                    correction,  # correction
-                    translation,  # translation
-                    note,  # note
-                    self.last_response_time,  # response_time
-                    self.MODEL_NAME  # MODEL_NAME
-                ])
-            self.export_button.hide()
+    #         # Initialisation des variables pour l'export
+    #     self.last_response = ""
+    #     self.last_response_time = 0
+    #     self.last_user_input = ""
+    #     self['token_usage'] = {}
+    #     self.model_name = ""
 
+
+    def get_data(self):
+        if isinstance(self.last_response, dict) & isinstance(self.last_response['token_usage'], dict) :
+            try:
+                data ={
+                    'origin_language':  self.var1_select.currentText(),
+                    'target_language':  self.var2_select.currentText(),
+                    'intention_options':  self.var3_select.currentText(),
+                    'user_input': self.last_user_input,
+                    'correction': self.last_response.get('correction', ''),
+                    'translation': self.last_response.get('translation', ''),
+                    'note': self.last_response.get('note', ''),
+                    'response_time':  self.last_response_time,
+                    'model_name': self.last_response.get('model_name', ''),
+                    'completion_tokens': self.last_response['token_usage'].get('completion_tokens', ''),
+                    'prompt_tokens': self.last_response['token_usage'].get('prompt_tokens', ''),
+                    'total_tokens': self.last_response['token_usage'].get('total_tokens', ''),
+                    'completion_time': self.last_response['token_usage'].get('completion_time', ''),
+                    'prompt_time': self.last_response['token_usage'].get('prompt_time', ''),
+                    'queue_time': self.last_response['token_usage'].get('queue_time', '')
+                }
+                return  data
+            except KeyError as e:
+                raise ValueError(f"Clé manquante : {e}")
         else:
-            print("Erreur : last_bot_response n'est pas un dictionnaire")
+            print("Erreur : last_response n'est pas un dictionnaire")
+            
+
+    def write_to_csv(self, data):
+        with open('chat_log.csv', 'a', newline='', encoding='utf-8') as csvfile:
+            writer = csv.writer(csvfile)
+            if csvfile.tell() == 0:
+                writer.writerow(list(data.keys()))
+            writer.writerow(list(data.values()))
+        
+    def export_to_csv(self):
+        data = self.get_data()
+        self.write_to_csv(data)
+        self.export_button.hide()
 
     def toggle_chatbot(self):
         # Bascule entre l'initialisation et la réinitialisation du chatbot
@@ -186,14 +209,17 @@ class ChatApp(QWidget):
         try:
             start_time = time.time()
             bot_response = self.chatbot_manager.get_response(user_input)
-            response= RESPONSE_TEMPLATE.format(**bot_response)
             end_time = time.time()
             response_time = end_time - start_time
-            self.new_message_signal.emit("Bot", response, response_time)
-
-            self.last_bot_response = bot_response
+            # récupération du message de retour dans le template designer
+            response= RESPONSE_TEMPLATE.format(**bot_response)
+            self.last_response = bot_response
             self.last_response_time = response_time
             self.last_user_input = user_input
+            # Retour de la traudtion a l'interface
+            print(bot_response)
+            self.new_message_signal.emit("Bot", response, response_time)
+
 
         except Exception as e:
             self.new_message_signal.emit("Système", f"Une erreur s'est produite: {e}", 0)
@@ -201,13 +227,14 @@ class ChatApp(QWidget):
         finally:
             self.stop_loading_signal.emit()
 
-    def display_message(self, sender, message, response_time):
+    def display_message(self, sender, message, response_time,token_usage=None ):
 
         if sender == "Bot"  :
             self.export_button.show()
             formatted_message = f"{message}\n"
             if response_time > 0:
-                formatted_message += f"_(Temps de réponse : {response_time:.2f} secondes)_\n"
+                formatted_message += f"_(Temps de réponse : {response_time:.2f} secondes, "
+                formatted_message += f"Prompt tokens : {self.last_response['token_usage']['prompt_tokens']}, Completion tokens : {self.last_response['token_usage']['completion_tokens']}, Total tokens : {self.last_response['token_usage']['total_tokens']})_"
         else :
             formatted_message = f"**{sender}** :\n{message}\n"
 
