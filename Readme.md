@@ -1,6 +1,6 @@
 # Chatbot Multilingue de Correction et Traduction
 
-Ce projet présente un exemple d'intégration d'un chatbot, développé avec les LangChain, Groq & PyQt5 pour l'interface graphique. L'application offre des fonctionnalités de correction orthographique, grammaticale, adaptation d'un style, et traduction depuis et vers les langues sélectionnées par l'utilisateur.
+Ce projet présente est un exemple d'intégration d'un chatbot, développé avec LangChain, Groq et PyQt5 pour l'interface graphique. le bot offre des fonctionnalités de correction orthographique, grammaticale, adaptation d'un style, et traduction depuis et vers les langues sélectionnées par l'utilisateur.
 
 
 ## Fonctionnalités
