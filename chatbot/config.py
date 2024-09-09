@@ -6,19 +6,34 @@ from chatbot.groq_credential import GROQ_API_KEY_PERSO
 
 GROQ_API_KEY = GROQ_API_KEY_PERSO
 
-MODEL_NAME = 'llama-3.1-70b-versatile'
+# MODEL_NAME = 'llama-3.1-70b-versatile'
 # MODEL_NAME = 'mixtral-8x7b-32768'
-# MODEL_NAME = 'gemma2-9b-it'
+MODEL_NAME = 'gemma2-9b-it'
 
-def SYSTEM_PROMPT(origin_language,intention_options, target_language):
-
-    return f"""
-    Your first task is to understand the text and correct it in {origin_language} {intention_options}.
-    Translate the corrected text into the current {target_language}.
-    finally, include notes in French to help the user understand the translation.
-    Make sure not to alter the original message and tone.  
-    """
-
+def SYSTEM_PROMPT(origin_language,target_language,target_intention):
+    if(target_intention == Intention_options[0]) :
+        prompt = f"""
+            Your task is to:
+                1. Correct the text in {origin_language}, maintaining the original tone but in a more chatty way.
+                2. Translate the corrected text into {target_language}.
+                3. Provide explanatory notes in French to help the user understand the translation. If the text is short (e.g. a single sentence), add additional translation examples to help the user.
+        """
+    else :
+        prompt = f"""
+            Your task is to:
+                1. Correct the text in {origin_language}, maintaining the original tone while applying the specified mood from {target_intention} (e.g., "{Intention_options[4]}" - "{Intention_options[7]}" - "{Intention_options[9]}").
+                2. Translate the corrected text into {target_language}, ensuring the translation reflects both the original tone and the specified {target_intention}.
+                3. Provide explanatory notes in French to help the user understand how the translation aligns with the selected mood.
+            Ensure that the core message and original tone are preserved, while adapting the text to the specified mood.
+        """
+    print(prompt)
+    return prompt
+    #return f"""
+    #Your first task is to understand the text and correct it in {origin_language} {intention_options}.
+    #Translate the corrected text into the current {target_language}.
+    #finally, include notes in French to help the user understand the translation.
+    #Make sure not to alter the original message and tone.  
+    #"""
 
 RESPONSE_TEMPLATE = """
 **Texte original :** 
@@ -35,6 +50,7 @@ _________________________
 
 Languages = [
     ("Anglais", "English"),
+    ("Coréen","Korean"),
     ("Chinois", "Chinese"),
     ("Espagnol", "Spanish"),
     ("Arabe", "Arabic"),
@@ -47,7 +63,7 @@ Languages = [
 ]
 
 Intention_options = [
-    ("Auto", ""),
+    ("Auto", "auto"),
     ("Bavard", "in a more chatty way"),
     ("Enjoué", "in a more cheerful way"),
     ("Sérieux", "in a more serious way"),
@@ -81,7 +97,6 @@ Intention_options = [
     ("Maternel/Paternel", "with a protective, nurturing tone"),
     ("Provocateur", "in a deliberately provocative manner"),
     ("Mystérieux", "in a subtly enigmatic and cryptic way")
-
 ]
 
 #Intention_options = [
