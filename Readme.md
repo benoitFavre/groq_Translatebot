@@ -36,6 +36,9 @@ chatbot_project/
 │   ├── config.py                # Prompte, Template de réponse & clefs API
 │   ├── gui.py                   # Interface graphique PyQt5
 │   ├── chatbot.py               # Logique du chatbot (intégration avec LangChain et Groq)
+│   ├── chatbotservice.py        # séparation des services
+├── tests/                       
+│   ├── test_chatbotservice.py   # test des services       
 ├── requirements.txt             # Liste des dépendances Python
 ├── README.md                    # Documentation du projet
 └── main.py                      # Script d'entré l'application

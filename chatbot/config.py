@@ -8,25 +8,26 @@ GROQ_API_KEY = GROQ_API_KEY_PERSO
 
 # MODEL_NAME = 'llama-3.1-70b-versatile'
 # MODEL_NAME = 'mixtral-8x7b-32768'
-MODEL_NAME = 'gemma2-9b-it'
+# MODEL_NAME = 'gemma2-9b-it'
+MODEL_NAME = 'llama3-groq-8b-8192-tool-use-preview'
+# MODEL_NAME = 'llama-3.1-8b-instant'
 
 def SYSTEM_PROMPT(origin_language,target_language,target_intention):
-    if(target_intention == Intention_options[0]) :
+    if(not target_intention or target_intention == Intention_options[0]) :
         prompt = f"""
             Your task is to:
-                1. Correct the text in {origin_language}, maintaining the original tone but in a more chatty way.
+                1. Correct the text in {origin_language}, maintaining the original tone.
                 2. Translate the corrected text into {target_language}.
                 3. Provide explanatory notes in French to help the user understand the translation. If the text is short (e.g. a single sentence), add additional translation examples to help the user.
         """
     else :
         prompt = f"""
             Your task is to:
-                1. Correct the text in {origin_language}, maintaining the original tone while applying the specified mood from {target_intention} (e.g., "{Intention_options[4]}" - "{Intention_options[7]}" - "{Intention_options[9]}").
+                1. Correct the text in {origin_language}, maintaining the original tone while applying the specified mood from {target_intention}.
                 2. Translate the corrected text into {target_language}, ensuring the translation reflects both the original tone and the specified {target_intention}.
-                3. Provide explanatory notes in French to help the user understand how the translation aligns with the selected mood.
+                3. Provide explanatory notes written in FRENCH to help the user understand how the translation aligns with the selected mood.
             Ensure that the core message and original tone are preserved, while adapting the text to the specified mood.
         """
-    print(prompt)
     return prompt
     #return f"""
     #Your first task is to understand the text and correct it in {origin_language} {intention_options}.
@@ -50,11 +51,11 @@ _________________________
 
 Languages = [
     ("Anglais", "English"),
-    ("Coréen","Korean"),
     ("Chinois", "Chinese"),
     ("Espagnol", "Spanish"),
     ("Arabe", "Arabic"),
     ("Français", "French"),
+    ("Coréen","Korean"),
     ("Russe", "French Gangsta rap"), 
     ("Allemand", "German"),
     ("Portugais", "Portuguese"),
@@ -78,6 +79,7 @@ Intention_options = [
 
 Intention_options = [
     ("Auto", ""),
+    ("Professionnel", "in a serious, competent and professional manner"),
     ("Bavard", "in a completely more chatty way"),
     ("Comique", "in a hilariously over-the-top way"),
     ("Surréaliste", "in a completely surreal, dreamlike way"),

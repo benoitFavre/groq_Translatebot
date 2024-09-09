@@ -3,7 +3,7 @@ from langchain.schema import SystemMessage
 from langchain.output_parsers import StructuredOutputParser, ResponseSchema
 from langchain_groq import ChatGroq
 from chatbot.config import GROQ_API_KEY, MODEL_NAME, SYSTEM_PROMPT, RESPONSE_TEMPLATE
-from langchain.globals import set_debug
+#from langchain.globals import set_debug
 
 class ChatbotManager:
     def __init__(self, origin_language, target_language,intention_options):
@@ -12,7 +12,7 @@ class ChatbotManager:
             model_name=MODEL_NAME,
             temperature=0.7
         )
-        set_debug(True)
+        #set_debug(True)
         response_schemas = [
             ResponseSchema(name="correction", description="Corrected text"),
             ResponseSchema(name="translation", description="The translation"),

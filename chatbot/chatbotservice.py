@@ -1,5 +1,7 @@
 from chatbot.chatbot import ChatbotManager
 import csv
+import time
+
 class ChatbotService:
     def __init__(self, options, intention_options, RESPONSE_TEMPLATE):
         self.options = options
@@ -21,13 +23,16 @@ class ChatbotService:
         var2_value = next(opt[1] for opt in self.options if opt[0] == var2_name)
         var3_value = next(opt[1] for opt in self.intention_options if opt[0] == var3_name)
         self.chatbot_manager = ChatbotManager(var1_value, var2_value, var3_value)
-        return f"Chatbot initialisé en **{var1_name}** vers **{var2_name}** avec une intention **{var3_name}**"
-
+        return f"Je suis paramétré pour corriger en  **{var1_name}** et apporter une traduction en **{var2_name}** dans une humeur **{var3_name}**"
+    
     def send_message(self, user_message):
         if not self.chatbot_manager:
             return "Veuillez d'abord initialiser le chatbot."
+        
+        start_time = time.time()
         bot_response = self.chatbot_manager.get_response(user_message)
-        response_time = 0  # à calculer
+        end_time = time.time()
+        response_time = end_time - start_time
         self.last_response = bot_response
         self.last_response_time = response_time
         self.last_user_input = user_message
