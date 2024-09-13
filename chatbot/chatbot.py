@@ -2,7 +2,7 @@ from langchain.prompts import ChatPromptTemplate, HumanMessagePromptTemplate
 from langchain.schema import SystemMessage
 from langchain.output_parsers import StructuredOutputParser, ResponseSchema
 from langchain_groq import ChatGroq
-from chatbot.config import GROQ_API_KEY, MODEL_NAME, SYSTEM_PROMPT, RESPONSE_TEMPLATE
+from chatbot.config import GROQ_API_KEY, MODEL_NAME, SYSTEM_PROMPT
 #from langchain.globals import set_debug
 
 class ChatbotManager:

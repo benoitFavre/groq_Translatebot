@@ -43,4 +43,3 @@ tenacity==8.5.0
 typing_extensions==4.12.2
 urllib3==2.2.2
 yarl==1.9.4
-flask==2.0.3
