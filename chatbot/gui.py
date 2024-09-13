@@ -58,9 +58,6 @@ class ChatApp(QWidget):
         self.var2_select.currentTextChanged.connect(self.toggle_param_chatbot)
         self.var3_select.currentTextChanged.connect(self.toggle_param_chatbot)
 
-        
-               
-
         # Zone de texte pour afficher les messages
         self.text_zone = QTextEdit(self)
         self.text_zone.setReadOnly(True)
